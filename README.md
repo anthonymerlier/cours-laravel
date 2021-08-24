@@ -22,6 +22,12 @@ composer update
 
     *NB : Il faudra au préalable créer la database dans PhpMyAdmin*
 
+    Puis entrer la commande suivante pour générer une clé Laravel :
+
+    ```
+    php artisan key:generate
+    ```
+
 6. Lancer les migrations en tapant :
 ```
 php artisan migrate --seed
