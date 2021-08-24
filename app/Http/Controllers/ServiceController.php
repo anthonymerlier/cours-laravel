@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -26,7 +27,7 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        //
+        return view("services.create");
     }
 
     /**
@@ -37,7 +38,16 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+
+        $service = new Service;
+        $service->title = $request->title;
+        $service->slug = Str::slug($service->title);
+        $service->content = $request->content;
+        // dd($service);
+        $service->save();
+
+        return redirect()->route("servicespage");
     }
 
     /**
