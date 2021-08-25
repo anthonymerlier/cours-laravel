@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ServiceController extends Controller
 {
@@ -17,7 +18,8 @@ class ServiceController extends Controller
     {
         $services = Service::all();
         // dd($services);
-        return view('pages.services', [ "services" => $services ]);
+        // return view('services.index', [ "services" => $services ]);
+        return $services;
     }
 
     /**
@@ -40,6 +42,11 @@ class ServiceController extends Controller
     {
         // dd($request);
 
+        $request->validate( [
+            "title" => [ "required", "min:3", "max:100", "unique:services", Rule::notIn(['create', 'store']), ],
+            "content" => [ "required" ]
+        ] );
+
         $service = new Service;
         $service->title = $request->title;
         $service->slug = Str::slug($service->title);
@@ -58,8 +65,10 @@ class ServiceController extends Controller
      */
     public function show(string $slug)
     {
-        $service = Service::where("slug", "=", $slug)->firstOrFail();
-        return view("services.show", [ "service" => $service ] );
+        $service = Service::where("slug", $slug)->firstOrFail();
+        return view("services.show", [ 
+            "service" => $service 
+        ] );
     }
 
     /**
@@ -68,9 +77,12 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function edit(Service $service)
+    public function edit(string $slug)
     {
-        //
+        $service = Service::where("slug", $slug)->firstOrFail();
+        return view("services.edit", [ 
+            "service" => $service 
+        ]);
     }
 
     /**
@@ -80,9 +92,23 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Service $service)
+    public function update(Request $request, string $slug)
     {
-        //
+        $request->validate( [
+            "title" => [ "required", "min:3", "max:100", Rule::notIn(['create', 'store']), ],
+            "content" => [ "required" ]
+        ] );
+
+        $service = Service::where("slug", $slug)->firstOrFail();
+
+        // Pas besoin d'un nouveau service puisque modifie un existant
+        // $service = new Service;
+        $service->title = $request->title;
+        $service->content = $request->content;
+        $service->save();
+
+        return redirect()->route("servicepage", $slug);
+        // dd($service);
     }
 
     /**
@@ -91,8 +117,13 @@ class ServiceController extends Controller
      * @param  \App\Models\Service  $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Service $service)
+    public function destroy(string $slug)
     {
-        //
+        // On récupère le service conerné,
+        $service = Service::where("slug", $slug)->firstOrFail();
+        // On lance la suppression
+        $service->delete();
+
+        return redirect()->route("servicespage");
     }
 }
