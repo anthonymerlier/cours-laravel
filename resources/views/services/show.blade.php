@@ -6,6 +6,10 @@
     <p>Contenu : {{ $service->content }}</p>
     <div>
         <a href="{{ route("editservicepage", $service->slug) }}" style="background: orange; padding: 0.5rem; color:white; border-radius: 7px ">Modifier le service</a>
-        <a href="{{ route("servicedelete", $service->slug) }}" style="background: red; padding: 0.5rem; color:white; border-radius: 7px ">Supprimer  le service</a>
+        <form action="{{ route("servicedelete", $service->slug) }}" method="post">
+            @csrf
+            @method('DELETE')
+            <button type="submit" style="background: red; padding: 0.5rem; color:white; border-radius: 7px; margin-top: 25px ">Supprimer  le service</button>
+        </form>
     </div>
 @endsection

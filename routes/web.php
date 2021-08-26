@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\PhoneController;
 use App\Http\Controllers\ServiceController;
 
 /*
@@ -25,7 +27,13 @@ Route::get("/service/create", [ServiceController::class, "create"])->name("creat
 
 Route::post("/service/store", [ ServiceController::class, "store" ] )->name("servicestore");
 Route::post("/service/{slug}/update", [ ServiceController::class, "update" ] )->name("serviceupdate");
-Route::get("/service/{slug}/destroy", [ ServiceController::class, "destroy" ] )->name("servicedelete");
-Route::get("/service/{slug}/edit", [ServiceController::class, "edit"])->name("editservicepage");
+Route::delete("/service/{slug}/destroy", [ ServiceController::class, "destroy" ] )->name("servicedelete");
 
+Route::get("/service/{slug}/edit", [ServiceController::class, "edit"])->name("editservicepage");
 Route::get('/service/{slug}', [ ServiceController::class, "show" ] )->name("servicepage");
+
+Route::get('/brand/{slug}', [ BrandController::class, "show" ] )->name("brand.show");
+Route::get('/phone/{slug}', [ PhoneController::class, "show" ] )->name("phone.show");
+
+Route::get("/brands", [ BrandController::class, "index" ])->name("brands.index");
+Route::get("/phones", [ PhoneController::class, "index" ])->name("phones.index");
