@@ -36,7 +36,8 @@ class PhoneController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $mailController = new MailController;
+        $mailController->onInsertPhone(auth()->user()->id, auth()->user()->email);
     }
 
     /**

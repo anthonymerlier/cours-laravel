@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PhoneController;
@@ -37,3 +38,5 @@ Route::get('/phone/{slug}', [ PhoneController::class, "show" ] )->name("phone.sh
 
 Route::get("/brands", [ BrandController::class, "index" ])->name("brands.index");
 Route::get("/phones", [ PhoneController::class, "index" ])->name("phones.index");
+
+Route::get("/mailsend", [ MailController::class, "onInsertPhone" ])->name("mailsend");
