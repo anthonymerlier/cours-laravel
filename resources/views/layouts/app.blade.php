@@ -8,7 +8,11 @@
     <title>TP DEV WEB</title>
 </head>
 <body>
-        @include('includes.header')
-        @yield('content')
+        {{-- @include('includes.header') --}}
+        <x-navigation type="light" />
+        <div class="container">
+            @yield('content')
+        </div>
+        <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

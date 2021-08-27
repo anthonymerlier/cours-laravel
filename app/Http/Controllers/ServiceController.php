@@ -6,6 +6,7 @@ use App\Models\Service;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
@@ -41,15 +42,20 @@ class ServiceController extends Controller
     {
         // dd($request);
 
+        $name = Storage::disk('public')->put('test', $request->picture);
+        // dd($name);
+
         $request->validate( [
             "title" => [ "required", "min:3", "max:100", "unique:services", Rule::notIn(['create', 'store']), ],
-            "content" => [ "required" ]
+            "content" => [ "required" ],
+            "picture" => [ "required" ],
         ] );
 
         $service = new Service;
         $service->title = $request->title;
         $service->slug = Str::slug($service->title);
         $service->content = $request->content;
+        $service->picture = $name;
         // dd($service);
         $service->save();
 
@@ -65,6 +71,7 @@ class ServiceController extends Controller
     public function show(string $slug)
     {
         $service = Service::where("slug", $slug)->firstOrFail();
+        $service->picture = Storage::url($service->picture);
         return view("services.show", [ 
             "service" => $service 
         ] );
